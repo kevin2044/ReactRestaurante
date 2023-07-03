@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import routes from './routes' */
 import { Home } from '../pages/Client'
 import { ClientLayout, AdminLayout, BasicLayout } from '../layouts'
-import { HomeAdmin, LoginAdmin } from '../pages/Admin'
+import { CategoriesAdmin, HomeAdmin, LoginAdmin, UserAdmin } from '../pages/Admin'
 import { Error404 } from '../pages'
 
 export function Navigation(){
@@ -30,7 +30,17 @@ export function Navigation(){
                 } />
                 <Route path="/admin" element={
                     <AdminLayout>
-                        <HomeAdmin />
+                        <LoginAdmin />
+                    </AdminLayout>
+                } />
+                <Route path="/admin/users" element={
+                    <AdminLayout>
+                        <UserAdmin />
+                    </AdminLayout>
+                } />
+                <Route path="/admin/categories" element={
+                    <AdminLayout>
+                        <CategoriesAdmin />
                     </AdminLayout>
                 } />
                 <Route path="*" element={
