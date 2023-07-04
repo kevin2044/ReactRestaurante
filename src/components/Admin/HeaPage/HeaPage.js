@@ -14,11 +14,6 @@ export function HeaPage(props) {
              {btnTitle}
           </Button>
         )}
-        {btnTitleTwo && (
-          <Button negative onClick={btnClickTwo}>
-             {btnTitleTwo}
-          </Button>
-        )}
       </div>
     </div>
   )
