@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import routes from './routes' */
 import { Home } from '../pages/Client'
 import { ClientLayout, AdminLayout, BasicLayout } from '../layouts'
-import { CategoriesAdmin, HomeAdmin, LoginAdmin, UserAdmin } from '../pages/Admin'
+import { CategoriesAdmin, LoginAdmin, UserAdmin } from '../pages/Admin'
 import { Error404 } from '../pages'
 
 export function Navigation(){
