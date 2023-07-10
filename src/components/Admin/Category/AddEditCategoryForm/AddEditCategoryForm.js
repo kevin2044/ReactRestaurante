@@ -6,16 +6,30 @@ import * as Yup from 'yup'
 import { useCategory } from '../../../../hooks'
 import './AddEditCategoryForm.scss'
 
-export function AddEditCategoryForm() {
-  const [previewImage, setPreviewImage] = useState(null)
+export function AddEditCategoryForm(props) {
+  const { onClose, onRefetch, category } = props
+  const [previewImage, setPreviewImage] = useState(category?.image || null)
+  const { addCategory, updateCategory } = useCategory()
+
+  console.log(category)
 
   const formik = useFormik({
-    initialValues: initialValues(),
-    validationSchema: Yup.object(newSchema()),
+    initialValues: initialValues(category),
+    validationSchema: Yup.object(category ? updateSchema() : newSchema()),
     validateOnChange: false,
-    onSubmit: (formValue) => {
-      console.log('Formulario enviado')
-      console.log(formValue)
+    onSubmit: async(formValue) => {
+      try {
+        if(category){
+          console.log('Actualizar categoria')
+          await updateCategory(category.id, formValue)
+        }else{
+          await addCategory(formValue)
+        }
+        onRefetch()
+        onClose()
+      } catch (error) {
+        console.error(error)
+      }
     }
   })
 
@@ -28,7 +42,10 @@ export function AddEditCategoryForm() {
   }, [])
 
   const { getRootProps, getInputProps } = useDropzone({
-    accept: "image/jpg, image/png",
+    /* accept: "image/jpeg, image/png", */
+    accept: {
+     'image/*': ['.jpeg', '.jpg', '.png'],
+    },
     noKeyboard: true,
     multiple: false,
     onDrop,
@@ -44,20 +61,20 @@ export function AddEditCategoryForm() {
         error={formik.errors.title}
       />
       <Button type="button" fluid {...getRootProps()} color={formik.errors.image && 'red'}>
-        Subir imagen
+        {previewImage ? "Cambiar imagen" : "Subir imagen"}
       </Button>
 
       <input {...getInputProps()} />
       <Image src={previewImage} fluid />
-      <Button type="submit" primary fluid content="Crear" />
+      <Button type="submit" primary fluid content={category ? "Actualizar" : "Crear"} />
     </Form>
   )
 }
 
 
-function initialValues(){
+function initialValues(data){
   return {
-    title: "",
+    title: data?.title || "",
     image: "",
   }
 }
@@ -66,5 +83,12 @@ function newSchema(){
   return {
     title: Yup.string().required(true),
     image: Yup.string().required(true),
+  }
+}
+
+function updateSchema(){
+  return {
+    title: Yup.string().required(true),
+    image: Yup.string(),
   }
 }
